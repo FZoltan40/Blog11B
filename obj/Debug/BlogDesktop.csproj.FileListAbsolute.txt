@@ -41,3 +41,5 @@ C:\Users\FarkasZ\source\repos\BlogDesktop\obj\Debug\BlogDesktop.csproj.CoreCompi
 C:\Users\FarkasZ\source\repos\BlogDesktop\obj\Debug\BlogDesk.3B9834E8.Up2Date
 C:\Users\FarkasZ\source\repos\BlogDesktop\obj\Debug\BlogDesktop.exe
 C:\Users\FarkasZ\source\repos\BlogDesktop\obj\Debug\BlogDesktop.pdb
+C:\Users\FarkasZ\source\repos\BlogDesktop\obj\Debug\BlogDesktop.Form2.resources
+C:\Users\FarkasZ\source\repos\BlogDesktop\obj\Debug\BlogDesktop.Form3.resources

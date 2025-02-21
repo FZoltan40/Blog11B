@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,6 +20,8 @@ namespace BlogDesktop
         }
 
         private const string ConnectionString = "Server=localhost;Database=blog;Uid=root;Password=;SslMode=None";
+
+        
         private bool beleptet(string username, string password)
         {
             try
@@ -34,12 +37,15 @@ namespace BlogDesktop
 
                     MySqlDataReader dr = cmd.ExecuteReader();
                     bool van = dr.Read();
+                    if (van)
+                    {
+                        UserId.Id = dr.GetInt32(0);
+                    }
                     connection.Close();
-
                     return  van;
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
             }
@@ -47,15 +53,30 @@ namespace BlogDesktop
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            if (beleptet(textBox1.Text, textBox2.Text))
+            try
             {
-                MessageBox.Show("Regisztrált tag!");
+                if (beleptet(textBox1.Text, textBox2.Text))
+                {
+                    Form3 form2 = new Form3();
+                    form2.ShowDialog();
+                }
+                else
+                {
+                    Form2 form2 = new Form2();
+                    form2.ShowDialog();
+                }
             }
-            else 
+            catch (Exception ex)
             {
-                Form2 form2 = new Form2();
-                form2.ShowDialog();
+
+                MessageBox.Show(ex.Message);
             }
+           
+        }
+
+        public static class UserId
+        {
+            public static int Id { get; set; }
         }
     }
 }
