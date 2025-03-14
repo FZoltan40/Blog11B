@@ -1,13 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BlogDesktop
@@ -17,6 +9,8 @@ namespace BlogDesktop
         public Form1()
         {
             InitializeComponent();
+            textBox1.Text = "zoli007";
+            textBox2.Text = "Alma123@";
         }
 
         private const string ConnectionString = "Server=localhost;Database=blog;Uid=root;Password=;SslMode=None";
@@ -39,7 +33,7 @@ namespace BlogDesktop
                     bool van = dr.Read();
                     if (van)
                     {
-                        UserId.Id = dr.GetInt32(0);
+                        UsersDatas.Id = dr.GetInt32(0);
                     }
                     connection.Close();
                     return  van;
@@ -74,9 +68,10 @@ namespace BlogDesktop
            
         }
 
-        public static class UserId
+        public static class UsersDatas
         {
             public static int Id { get; set; }
+            public static int CategoryId { get; set; }
         }
     }
 }

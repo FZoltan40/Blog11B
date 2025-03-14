@@ -1,10 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using static BlogDesktop.Form1;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
 
 namespace BlogDesktop
 {
@@ -37,8 +35,10 @@ namespace BlogDesktop
                             Comment = dr.GetString(0),
                             User = dr.GetString(1)
                         }; 
-                        listBox1.Items.Add(comment);
-                        
+                        listBox1.Items.Add(comment.Comment);
+                        listBox1.Items.Add(comment.User);
+                        listBox1.Items.Add("");
+
                     }
                     connection.Close();
 
@@ -88,7 +88,7 @@ namespace BlogDesktop
         {
             try
             {
-                string sql = "INSERT INTO `blogtable`(`Title`, `Post`, `UserId`) VALUES (@title,@post,@userid)";
+                string sql = "INSERT INTO `blogtable`(`Title`, `Post`, `UserId`, `categoryId`) VALUES (@title,@post,@userid,@categoryId)";
 
                 using (var connection = new MySqlConnection(ConnectionString))
                 {
@@ -98,7 +98,8 @@ namespace BlogDesktop
                     {
                         command.Parameters.AddWithValue("@title", title);
                         command.Parameters.AddWithValue("@post", post);
-                        command.Parameters.AddWithValue("@userid", UserId.Id);
+                        command.Parameters.AddWithValue("@userid", UsersDatas.Id);
+                        command.Parameters.AddWithValue("@categoryId", UsersDatas.CategoryId);
 
                         command.ExecuteNonQuery();
                     }
@@ -135,7 +136,7 @@ namespace BlogDesktop
                     connection.Close();
                     comboBox1.Items.Clear();
                     ListCategory();
-                    return "Sikeres post hozzáadás.";
+                    return "Sikeres kategória hozzáadás.";
                 }
             }
             catch (Exception ex)
@@ -143,31 +144,47 @@ namespace BlogDesktop
                 return ex.Message;
             }
         }
+
+        private void getCategoryId(string catName)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "SELECT `Id` FROM `category` WHERE `CategoryName`= @catName;";
+
+                    MySqlCommand cmd = new MySqlCommand(sql, connection);
+                    cmd.Parameters.AddWithValue("@catName",catName);
+
+                    MySqlDataReader dr = cmd.ExecuteReader();
+                    var result = dr.Read();
+
+                    UsersDatas.CategoryId = dr.GetInt32(0);
+                    connection.Close();
+                }
+               
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Hiba a kategória Id lekérdezésénél!");
+            }
+        }
         private void button1_Click(object sender, System.EventArgs e)
         {
-            AddNewPost(textBox1.Text, textBox2.Text);
-        }
-
-        private void textBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_MouseEnter(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void Form3_Load(object sender, EventArgs e)
-        {
-
+            if(comboBox1.Text!= "")
+            {
+                AddNewPost(comboBox1.Text, textBox2.Text);
+                return;
+            }
+            MessageBox.Show("Ketegória mező ne lehet üres!");
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             try
             {
-               
                MessageBox.Show(AddNewCategory(textBox1.Text));
 
             }
@@ -176,6 +193,11 @@ namespace BlogDesktop
 
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void comboBox1_SelectedValueChanged_1(object sender, EventArgs e)
+        {
+            getCategoryId(comboBox1.Text);
         }
     }
 }
